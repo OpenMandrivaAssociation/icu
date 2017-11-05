@@ -16,7 +16,7 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	59.1
+Version:	60.1
 Release:	1
 License:	MIT
 Group:		System/Libraries
@@ -138,6 +138,7 @@ export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 # disable bits and do unset TARGET twice, after configure
 # and before makeinstall
 %configure --disable-samples \
+	--disable-renaming \
 %if !%{with crosscompile}
 	--with-library-bits=64else32 \
 %endif

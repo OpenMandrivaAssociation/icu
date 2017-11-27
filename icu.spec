@@ -2,12 +2,13 @@
 %define libicudata %mklibname %{name}data %{major}
 %define libicui18n %mklibname %{name}i18n %{major}
 %define libicuio %mklibname %{name}io %{major}
-%define libicule %mklibname %{name}le %{major}
-%define libiculx %mklibname %{name}lx %{major}
 %define libicutest %mklibname %{name}test %{major}
 %define libicutu %mklibname %{name}tu %{major}
 %define libicuuc %mklibname %{name}uc %{major}
 %define devname %mklibname %{name} -d
+%ifarch %arm
+%define	_disable_lto %nil
+%endif
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')
 %bcond_with	crosscompile
@@ -15,8 +16,8 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	55.1
-Release:	4
+Version:	60.1
+Release:	1
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -34,7 +35,7 @@ for supplementary Unicode characters (needed for GB 18030 repertoire support).
 As computing environments become more heterogeneous, software portability
 becomes more important. ICU lets you produce the same results across all the
 various platforms you support, without sacrificing performance. It offers
-great flexibility to extend and customize the supplied services, which 
+great flexibility to extend and customize the supplied services, which
 include:
 
   * Text: Unicode text handling, full character properties and character set
@@ -42,12 +43,12 @@ include:
   * Analysis: Unicode regular expressions; full Unicode sets; character, word
     and line boundaries
   * Comparison: Language sensitive collation and searching
-  * Transformations: normalization, upper/lowercase, script transliterations 
+  * Transformations: normalization, upper/lowercase, script transliterations
     (50+ pairs)
   * Locales: Comprehensive locale data (230+) and resource bundle architecture
   * Complex Text Layout: Arabic, Hebrew, Indic and Thai
   * Time: Multi-calendar and time zone
-  * Formatting and Parsing: dates, times, numbers, currencies, messages and   
+  * Formatting and Parsing: dates, times, numbers, currencies, messages and
     rule based
 
 %package doc
@@ -80,20 +81,6 @@ Group:		System/Libraries
 %description -n %{libicuio}
 Library for the International Components for Unicode - icuio.
 
-%package -n %{libicule}
-Summary:	Library for the International Components for Unicode - icule
-Group:		System/Libraries
-
-%description -n %{libicule}
-Library for the International Components for Unicode - icule.
-
-%package -n %{libiculx}
-Summary:	Library for the International Components for Unicode - iculx
-Group:		System/Libraries
-
-%description -n %{libiculx}
-Library for the International Components for Unicode - iculx.
-
 %package -n %{libicutest}
 Summary:	Library for the International Components for Unicode - icutest
 Group:		System/Libraries
@@ -121,8 +108,6 @@ Group:		Development/Other
 Requires:	%{libicudata} >= %{EVRD}
 Requires:	%{libicui18n} >= %{EVRD}
 Requires:	%{libicuio} >= %{EVRD}
-Requires:	%{libicule} >= %{EVRD}
-Requires:	%{libiculx} >= %{EVRD}
 Requires:	%{libicutest} >= %{EVRD}
 Requires:	%{libicutu} >= %{EVRD}
 Requires:	%{libicuuc} >= %{EVRD}
@@ -146,13 +131,14 @@ cd -
 pushd source
 # (tpg) needed for patch 2
 export CFLAGS='%{optflags} -fno-strict-aliasing'
-export CXXFLAGS='%{optflags} -fno-strict-aliasing'
+export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++11'
 export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 # If we want crosscompile icu we need to built ICU package
 # and add --with-cross-build=/path/to/icu
 # disable bits and do unset TARGET twice, after configure
 # and before makeinstall
 %configure --disable-samples \
+	--disable-renaming \
 %if !%{with crosscompile}
 	--with-library-bits=64else32 \
 %endif
@@ -161,6 +147,21 @@ export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 	--with-cross-build=/path/to/built/icu/source/ \
 %endif
 	--disable-samples
+
+#rhbz#225896
+sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
+#rhbz#681941
+# As of ICU 52.1 the -nostdlib in tools/toolutil/Makefile results in undefined reference to `__dso_handle'
+sed -i 's|^LIBS =.*|LIBS = -L../../lib -licui18n -licuuc -lpthread|' tools/toolutil/Makefile
+#rhbz#813484
+sed -i 's| \$(docfilesdir)/installdox||' Makefile
+# There is no source/doc/html/search/ directory
+sed -i '/^\s\+\$(INSTALL_DATA) \$(docsrchfiles) \$(DESTDIR)\$(docdir)\/\$(docsubsrchdir)\s*$/d' Makefile
+# rhbz#856594 The configure --disable-renaming and possibly other options
+# result in icu/source/uconfig.h.prepend being created, include that content in
+# icu/source/common/unicode/uconfig.h to propagate to consumer packages.
+test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepend' -i common/unicode/uconfig.h
+
 %if %{with crosscompile}
 unset TARGET
 %endif
@@ -198,12 +199,6 @@ unset TARGET
 %files -n %{libicuio}
 %{_libdir}/libicuio.so.%{major}*
 
-%files -n %{libicule}
-%{_libdir}/libicule.so.%{major}*
-
-%files -n %{libiculx}
-%{_libdir}/libiculx.so.%{major}*
-
 %files -n %{libicutest}
 %{_libdir}/libicutest.so.%{major}*
 
@@ -217,9 +212,7 @@ unset TARGET
 %{_bindir}/icu-config
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
-%dir %{_includedir}/layout
 %dir %{_includedir}/unicode
-%{_includedir}/layout/*
 %{_includedir}/unicode/*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*

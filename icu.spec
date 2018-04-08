@@ -25,12 +25,13 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	61.1
-Release:	1
+Release:	2
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
 Source0:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-src.tgz
 Source1:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-docs.zip
+Patch0:		icu-61.1-DESTDIR.patch
 BuildRequires:	doxygen
 
 %description
@@ -66,10 +67,18 @@ Requires:	%{name} >= %{EVRD}
 %description doc
 Documentation for the International Components for Unicode.
 
+%package data
+Summary:	Data files needed for ICU
+Group:		System/Libraries
+
+%description data
+Data files needed for ICU
+
 %package -n %{libicudata}
 Summary:	Library for the International Components for Unicode - icudata
 Group:		System/Libraries
 Obsoletes:	%{mklibname icu 44} <= 4.4.2
+Requires:	%{name}-data = %{EVRD}
 %(for i in %compatible; do echo Provides: %{_lib}icudata$i = %{EVRD}; echo Obsoletes: %{_lib}icudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i%{archmarker}"; echo Provides: "%{_lib}icudata$i(%{arch})" = %{EVRD}; done)
 
 %description -n %{libicudata}
@@ -132,7 +141,7 @@ Provides:	%{name}-devel = %{EVRD}
 Development files and headers for the International Components for Unicode.
 
 %prep
-%autosetup -n %{name}
+%autosetup -p1 -n %{name}
 
 mkdir -p docs
 cd docs
@@ -154,7 +163,7 @@ export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 %if !%{with crosscompile}
 	--with-library-bits=64else32 \
 %endif
-	--with-data-packaging=library \
+	--with-data-packaging=files \
 %if %{with crosscompile}
 	--with-cross-build=/path/to/built/icu/source/ \
 %endif
@@ -210,6 +219,9 @@ done
 %{_mandir}/man1/*
 %{_mandir}/man8/*
 
+%files data
+%{_datadir}/%{name}
+
 %files -n %{libicudata}
 %{_libdir}/libicudata.so.*
 
@@ -236,6 +248,3 @@ done
 %{_includedir}/unicode/*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
-

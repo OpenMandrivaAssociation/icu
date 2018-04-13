@@ -25,7 +25,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	61.1
-Release:	2
+Release:	3
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -163,7 +163,7 @@ export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 %if !%{with crosscompile}
 	--with-library-bits=64else32 \
 %endif
-	--with-data-packaging=files \
+	--with-data-packaging=archive \
 %if %{with crosscompile}
 	--with-cross-build=/path/to/built/icu/source/ \
 %endif
@@ -220,7 +220,9 @@ done
 %{_mandir}/man8/*
 
 %files data
-%{_datadir}/%{name}
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/%{version}
+%{_datadir}/%{name}/%{version}/icudt%{major}l.dat
 
 %files -n %{libicudata}
 %{_libdir}/libicudata.so.*

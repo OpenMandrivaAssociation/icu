@@ -250,3 +250,7 @@ done
 %{_includedir}/unicode/*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*
+%{_datadir}/%{name}/%{version}/LICENSE
+%{_datadir}/%{name}/%{version}/config/mh-linux
+%{_datadir}/%{name}/%{version}/install-sh
+%{_datadir}/%{name}/%{version}/mkinstalldirs

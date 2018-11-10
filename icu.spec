@@ -16,7 +16,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to work
-%define compatible 60 61
+%define compatible 60 61 62
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')
 %bcond_with	crosscompile
@@ -24,14 +24,15 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	62.1
-Release:	2
+Version:	63.1
+Release:	1
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
 Source0:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-src.tgz
 Source1:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-docs.zip
 Patch0:		icu-61.1-DESTDIR.patch
+Patch1:		icu-63.1-CVE-2018-18928.patch
 BuildRequires:	doxygen
 
 %description
@@ -152,7 +153,7 @@ cd -
 pushd source
 # (tpg) needed for patch 2
 export CFLAGS='%{optflags} -fno-strict-aliasing'
-export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++11'
+export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++14'
 export LDFLAGS='%{ldflags} -fuse-ld=bfd'
 # If we want crosscompile icu we need to built ICU package
 # and add --with-cross-build=/path/to/icu

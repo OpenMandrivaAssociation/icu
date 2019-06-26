@@ -16,7 +16,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to work
-%define compatible 60 61 62
+%define compatible 60 61 62 63
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')
 %bcond_with	crosscompile
@@ -24,7 +24,7 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	63.1
+Version:	64.2
 Release:	1
 License:	MIT
 Group:		System/Libraries
@@ -32,7 +32,6 @@ Url:		http://www.icu-project.org/index.html
 Source0:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-src.tgz
 Source1:	http://download.icu-project.org/files/icu4c/%{version}/%{name}4c-%{tarballver}-docs.zip
 Patch0:		icu-61.1-DESTDIR.patch
-Patch1:		icu-63.1-CVE-2018-18928.patch
 BuildRequires:	doxygen
 
 %description
@@ -183,6 +182,9 @@ sed -i '/^\s\+\$(INSTALL_DATA) \$(docsrchfiles) \$(DESTDIR)\$(docdir)\/\$(docsub
 # result in icu/source/uconfig.h.prepend being created, include that content in
 # icu/source/common/unicode/uconfig.h to propagate to consumer packages.
 test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepend' -i common/unicode/uconfig.h
+
+mkdir -p data/out/tmp
+touch -d "10 years ago" data/out/tmp/icudata.lst
 
 %if %{with crosscompile}
 unset TARGET

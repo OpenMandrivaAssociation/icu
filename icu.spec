@@ -6,6 +6,7 @@
 %define libicutu %mklibname %{name}tu %{major}
 %define libicuuc %mklibname %{name}uc %{major}
 %define devname %mklibname %{name} -d
+%define beta rc
 %ifarch %arm
 %define	_disable_lto %nil
 %endif
@@ -16,17 +17,22 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to work
-%define compatible 60 61 62 63 64
+%define compatible 60 61 62 63 64 65
 
-%define tarballver %(echo %{version}|sed -e 's|\\.|_|g')
-%define dashedver %(echo %{version}|sed -e 's|\\.|-|g')
+%define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
+%define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
+%if "%{version}" == "%(echo %{version} |cut -d. -f1)"
+%define fsversion %{version}.1
+%else
+%define fsversion %{version}
+%endif
 %bcond_with	crosscompile
 
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	65.1
-Release:	1
+Version:	66
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -225,8 +231,8 @@ done
 
 %files data
 %dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/%{version}
-%{_datadir}/%{name}/%{version}/icudt%{major}l.dat
+%dir %{_datadir}/%{name}/%{fsversion}
+%{_datadir}/%{name}/%{fsversion}/icudt%{major}l.dat
 
 %files -n %{libicudata}
 %{_libdir}/libicudata.so.*
@@ -254,7 +260,7 @@ done
 %{_includedir}/unicode/*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*
-%{_datadir}/%{name}/%{version}/LICENSE
-%{_datadir}/%{name}/%{version}/config/mh-linux
-%{_datadir}/%{name}/%{version}/install-sh
-%{_datadir}/%{name}/%{version}/mkinstalldirs
+%{_datadir}/%{name}/%{fsversion}/LICENSE
+%{_datadir}/%{name}/%{fsversion}/config/mh-linux
+%{_datadir}/%{name}/%{fsversion}/install-sh
+%{_datadir}/%{name}/%{fsversion}/mkinstalldirs

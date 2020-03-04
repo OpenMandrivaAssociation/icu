@@ -32,7 +32,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	66
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -156,7 +156,7 @@ unzip -q %{SOURCE1}
 cd -
 
 %build
-pushd source
+cd source
 # (tpg) needed for patch 2
 export CFLAGS='%{optflags} -fno-strict-aliasing'
 export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++14'
@@ -196,9 +196,9 @@ touch -d "10 years ago" data/out/tmp/icudata.lst
 %if %{with crosscompile}
 unset TARGET
 %endif
-%make
-%make doc
-popd
+%make_build
+%make_build doc
+cd -
 
 #% check
 #pushd source
@@ -209,7 +209,7 @@ popd
 %if %{with crosscompile}
 unset TARGET
 %endif
-%makeinstall_std -C source
+%make_install -C source
 
 cd %{buildroot}%{_libdir}
 for c in %compatible; do

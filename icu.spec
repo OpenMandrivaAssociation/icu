@@ -6,7 +6,7 @@
 %define libicutu %mklibname %{name}tu %{major}
 %define libicuuc %mklibname %{name}uc %{major}
 %define devname %mklibname %{name} -d
-%define beta rc
+#define beta rc
 %ifarch %arm
 %define	_disable_lto %nil
 %endif
@@ -21,7 +21,7 @@
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
-%if "%{version}" == "%(echo %{version} |cut -d. -f1)"
+%if %{defined beta}
 %define fsversion %{version}.1
 %else
 %define fsversion %{version}
@@ -31,8 +31,8 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	66
-Release:	%{?beta:0.%{beta}.}2
+Version:	66.1
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html

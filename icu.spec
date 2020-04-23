@@ -17,7 +17,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to work
-%define compatible 60 61 62 63 64 65
+%define compatible 60 61 62 63 64 65 66
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -31,7 +31,7 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	66.1
+Version:	67.1
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries

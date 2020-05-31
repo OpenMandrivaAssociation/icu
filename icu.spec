@@ -1,3 +1,10 @@
+# ICU is used by harfbuzz, which is used by wine
+%ifarch %{x86_64}
+%bcond_without compat32
+%else
+%bcond_with compat32
+%endif
+
 %define major %(echo %{version} |cut -d. -f1)
 %define libicudata %mklibname %{name}data %{major}
 %define libicui18n %mklibname %{name}i18n %{major}
@@ -6,6 +13,13 @@
 %define libicutu %mklibname %{name}tu %{major}
 %define libicuuc %mklibname %{name}uc %{major}
 %define devname %mklibname %{name} -d
+%define lib32icudata %mklib32name %{name}data %{major}
+%define lib32icui18n %mklib32name %{name}i18n %{major}
+%define lib32icuio %mklib32name %{name}io %{major}
+%define lib32icutest %mklib32name %{name}test %{major}
+%define lib32icutu %mklib32name %{name}tu %{major}
+%define lib32icuuc %mklib32name %{name}uc %{major}
+%define dev32name %mklib32name %{name} -d
 #define beta rc
 %ifarch %arm
 %define	_disable_lto %nil
@@ -32,7 +46,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	67.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -147,6 +161,71 @@ Provides:	%{name}-devel = %{EVRD}
 %description -n	%{devname}
 Development files and headers for the International Components for Unicode.
 
+%if %{with compat32}
+%package -n %{lib32icudata}
+Summary:	Library for the International Components for Unicode - icudata (32-bit)
+Group:		System/Libraries
+Requires:	%{name}-data = %{EVRD}
+%(for i in %compatible; do echo Provides: libicudata$i = %{EVRD}; echo Obsoletes: libicudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i"; done)
+
+%description -n %{lib32icudata}
+Library for the International Components for Unicode - icudata.
+
+%package -n %{lib32icui18n}
+Summary:	Library for the International Components for Unicode - icui18n (32-bit)
+Group:		System/Libraries
+%(for i in %compatible; do echo Provides: libicui18n$i = %{EVRD}; echo Obsoletes: libicui18n$i "<" %{EVRD}; echo Provides: "libicui18n.so.$i"; done)
+
+%description -n %{lib32icui18n}
+Library for the International Components for Unicode - icui18n.
+
+%package -n %{lib32icuio}
+Summary:	Library for the International Components for Unicode - icuio (32-bit)
+Group:		System/Libraries
+%(for i in %compatible; do echo Provides: libicuio$i = %{EVRD}; echo Obsoletes: libicuio$i "<" %{EVRD}; echo Provides: "libicuio.so.$i"; done)
+
+%description -n %{lib32icuio}
+Library for the International Components for Unicode - icuio.
+
+%package -n %{lib32icutest}
+Summary:	Library for the International Components for Unicode - icutest (32-bit)
+Group:		System/Libraries
+%(for i in %compatible; do echo Provides: libicutest$i = %{EVRD}; echo Obsoletes: libicutest$i "<" %{EVRD}; echo Provides: "libicutest.so.$i"; done)
+
+%description -n %{lib32icutest}
+Library for the International Components for Unicode - icutest.
+
+%package -n %{lib32icutu}
+Summary:	Library for the International Components for Unicode - icutu (32-bit)
+Group:		System/Libraries
+%(for i in %compatible; do echo Provides: libicutu$i = %{EVRD}; echo Obsoletes: libicutu$i "<" %{EVRD}; echo Provides: "libicutu.so.$i"; done)
+
+%description -n %{lib32icutu}
+Library for the International Components for Unicode - icutu.
+
+%package -n %{lib32icuuc}
+Summary:	Library for the International Components for Unicode - icuuc (32-bit)
+Group:		System/Libraries
+%(for i in %compatible; do echo Provides: libicuuc$i = %{EVRD}; echo Obsoletes: libicuuc$i "<" %{EVRD}; echo Provides: "libicuuc.so.$i"; done)
+
+%description -n %{lib32icuuc}
+Library for the International Components for Unicode - icuuc.
+
+%package -n %{dev32name}
+Summary:	Development files for the International Components for Unicode (32-bit)
+Group:		Development/Other
+Requires:	%{devname} >= %{EVRD}
+Requires:	%{lib32icudata} >= %{EVRD}
+Requires:	%{lib32icui18n} >= %{EVRD}
+Requires:	%{lib32icuio} >= %{EVRD}
+Requires:	%{lib32icutest} >= %{EVRD}
+Requires:	%{lib32icutu} >= %{EVRD}
+Requires:	%{lib32icuuc} >= %{EVRD}
+
+%description -n	%{dev32name}
+Development files and headers for the International Components for Unicode.
+%endif
+
 %prep
 %autosetup -p1 -n %{name}
 
@@ -155,12 +234,17 @@ cd docs
 unzip -q %{SOURCE1}
 cd -
 
+%if %{with compat32}
+cp -a source source32
+%endif
+
 %build
-cd source
 # (tpg) needed for patch 2
 export CFLAGS='%{optflags} -fno-strict-aliasing'
 export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++14'
 export LDFLAGS='%{ldflags} -fuse-ld=bfd'
+
+cd source
 # If we want crosscompile icu we need to built ICU package
 # and add --with-cross-build=/path/to/icu
 # disable bits and do unset TARGET twice, after configure
@@ -200,6 +284,34 @@ unset TARGET
 %make_build doc
 cd -
 
+%if %{with compat32}
+cd source32
+%configure32 --disable-samples \
+	--disable-renaming \
+	--with-library-bits=64else32 \
+	--with-cross-build=$(pwd)/../source \
+	--with-data-packaging=archive
+#rhbz#225896
+sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
+#rhbz#681941
+# As of ICU 52.1 the -nostdlib in tools/toolutil/Makefile results in undefined reference to `__dso_handle'
+sed -i 's|^LIBS =.*|LIBS = -L../../lib -licui18n -licuuc -lpthread|' tools/toolutil/Makefile
+#rhbz#813484
+sed -i 's| \$(docfilesdir)/installdox||' Makefile
+# There is no source/doc/html/search/ directory
+sed -i '/^\s\+\$(INSTALL_DATA) \$(docsrchfiles) \$(DESTDIR)\$(docdir)\/\$(docsubsrchdir)\s*$/d' Makefile
+# rhbz#856594 The configure --disable-renaming and possibly other options
+# result in icu/source/uconfig.h.prepend being created, include that content in
+# icu/source/common/unicode/uconfig.h to propagate to consumer packages.
+test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepend' -i common/unicode/uconfig.h
+
+mkdir -p data/out/tmp
+touch -d "10 years ago" data/out/tmp/icudata.lst
+%make_build
+cd ..
+%endif
+
+
 #% check
 #pushd source
 #make check
@@ -208,6 +320,9 @@ cd -
 %install
 %if %{with crosscompile}
 unset TARGET
+%endif
+%if %{with compat32}
+%make_install -C source32
 %endif
 %make_install -C source
 
@@ -264,3 +379,29 @@ done
 %{_datadir}/%{name}/%{fsversion}/config/mh-linux
 %{_datadir}/%{name}/%{fsversion}/install-sh
 %{_datadir}/%{name}/%{fsversion}/mkinstalldirs
+
+%if %{with compat32}
+%files -n %{lib32icudata}
+%{_prefix}/lib/libicudata.so.*
+
+%files -n %{lib32icui18n}
+%{_prefix}/lib/libicui18n.so.*
+
+%files -n %{lib32icuio}
+%{_prefix}/lib/libicuio.so.*
+
+%files -n %{lib32icutest}
+%{_prefix}/lib/libicutest.so.*
+
+%files -n %{lib32icutu}
+%{_prefix}/lib/libicutu.so.*
+
+%files -n %{lib32icuuc}
+%{_prefix}/lib/libicuuc.so.*
+
+%files -n %{dev32name}
+%{_prefix}/lib/*.so
+%{_prefix}/lib/pkgconfig/*.pc
+%dir %{_prefix}/lib/%{name}
+%{_prefix}/lib/%{name}/*
+%endif

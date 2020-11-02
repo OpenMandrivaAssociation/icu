@@ -20,7 +20,7 @@
 %define lib32icutu %mklib32name %{name}tu %{major}
 %define lib32icuuc %mklib32name %{name}uc %{major}
 %define dev32name %mklib32name %{name} -d
-%define beta rc
+#define beta rc
 %ifarch %arm
 %define	_disable_lto %nil
 %endif
@@ -45,7 +45,7 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	68
+Version:	68.1
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries

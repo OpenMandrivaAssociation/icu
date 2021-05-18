@@ -46,7 +46,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	69.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		http://www.icu-project.org/index.html
@@ -405,3 +405,21 @@ done
 %dir %{_prefix}/lib/%{name}
 %{_prefix}/lib/%{name}/*
 %endif
+
+# Make sure the compat symlinks don't get removed when
+# we replace older packages
+%(for i in %{compatible}; do
+	for l in data i18n io test tu uc; do
+		cat <<EOF
+%%triggerpostun -- %{_lib}icu$l$i < %{EVRD}
+[ -e %{_libdir}/libicu$l.so.$i ] || ln -sf libicu$l.so.%{major} %{_libdir}/libicu$l.so.$i
+EOF
+
+%if %{with compat32}
+		cat <<EOF
+%%triggerpostun -- libicu$l$i < %{EVRD}
+[ -e %{_prefix}/lib/libicu$l.so.$i ] || ln -sf libicu$l.so.%{major} %{_prefix}/lib/libicu$l.so.$i
+EOF
+%endif
+	done
+done)

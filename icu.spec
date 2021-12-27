@@ -30,8 +30,8 @@
 %else
 %define archmarker %nil
 %endif
-# Previous versions that are ABI compatible enough for a symlink to work
-%define compatible 60 61 62 63 64 65 66 67 68
+# Previous versions that are ABI compatible enough for a symlink to (mostly) work
+%define compatible 60 61 62 63 64 65 66 67 68 69
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -45,12 +45,12 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	69.1
-Release:	%{?beta:0.%{beta}.}2
+Version:	70.1
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
-Url:		http://www.icu-project.org/index.html
-Source0:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-src.tar.xz
+Url:		https://icu.unicode.org/
+Source0:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-src.tgz
 Source1:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-docs.zip
 Patch0:		icu-61.1-DESTDIR.patch
 BuildRequires:	doxygen

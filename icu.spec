@@ -20,7 +20,7 @@
 %define lib32icutu %mklib32name %{name}tu %{major}
 %define lib32icuuc %mklib32name %{name}uc %{major}
 %define dev32name %mklib32name %{name} -d
-#define beta rc
+%define beta rc
 %ifarch %arm
 %define	_disable_lto %nil
 %endif
@@ -31,7 +31,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to (mostly) work
-%define compatible 60 61 62 63 64 65 66 67 68 69
+%define compatible 60 61 62 63 64 65 66 67 68 69 70
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -44,8 +44,7 @@
 
 Summary:	International Components for Unicode
 Name:		icu
-Epoch:		1
-Version:	70.1
+Version:	71
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries

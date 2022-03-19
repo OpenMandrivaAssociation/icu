@@ -44,6 +44,7 @@
 
 Summary:	International Components for Unicode
 Name:		icu
+Epoch:		1
 Version:	71
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT

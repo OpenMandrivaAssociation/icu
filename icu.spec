@@ -22,7 +22,7 @@
 %define dev32name %mklib32name %{name} -d
 %define beta rc
 %ifarch %arm
-%define	_disable_lto %nil
+%define _disable_lto %nil
 %endif
 %define arch %([ "%{_arch}" = "x86_64" ] && echo -n x86-64 || echo -n %{_arch})
 %if "%_lib" == "lib64"
@@ -93,7 +93,7 @@ Summary:	Data files needed for ICU
 Group:		System/Libraries
 
 %description data
-Data files needed for ICU
+Data files needed for ICU.
 
 %package -n %{libicudata}
 Summary:	Library for the International Components for Unicode - icudata
@@ -239,11 +239,6 @@ cp -a source source32
 %endif
 
 %build
-# (tpg) needed for patch 2
-export CFLAGS='%{optflags} -fno-strict-aliasing'
-export CXXFLAGS='%{optflags} -fno-strict-aliasing -std=c++14'
-export LDFLAGS='%{ldflags} -fuse-ld=bfd'
-
 cd source
 # If we want crosscompile icu we need to built ICU package
 # and add --with-cross-build=/path/to/icu

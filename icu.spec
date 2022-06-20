@@ -46,7 +46,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	71.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
@@ -327,6 +327,15 @@ for c in %compatible; do
 		ln -s $i ${i/%{major}/$c}
 	done
 done
+
+%if %{with compat32}
+cd %{buildroot}%{_prefix}/lib
+for c in %compatible; do
+	for i in *.so.%{major}; do
+		ln -s $i ${i/%{major}/$c}
+	done
+done
+%endif
 
 
 %files

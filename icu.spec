@@ -341,7 +341,6 @@ done
 %files
 %{_bindir}/*
 %exclude %{_bindir}/icu-config
-%{_sbindir}/*
 
 %files doc
 %doc readme.html docs/*

@@ -166,6 +166,7 @@ Development files and headers for the International Components for Unicode.
 Summary:	Library for the International Components for Unicode - icudata (32-bit)
 Group:		System/Libraries
 Requires:	%{name}-data = %{EVRD}
+BuildRequires:	libc6
 %(for i in %compatible; do echo Provides: libicudata$i = %{EVRD}; echo Obsoletes: libicudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i"; done)
 
 %description -n %{lib32icudata}

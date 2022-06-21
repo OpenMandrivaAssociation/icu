@@ -286,7 +286,7 @@ cd source32
 	--disable-renaming \
 	--with-library-bits=64else32 \
 	--with-cross-build=$(pwd)/../source \
-	--with-data-packaging=archive
+	--with-data-packaging=archive || cat config.log && exit 1
 #rhbz#225896
 sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
 #rhbz#681941

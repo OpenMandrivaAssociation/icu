@@ -31,7 +31,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to (mostly) work
-%define compatible 60 61 62 63 64 65 66 67 68 69 70
+%define compatible 60 61 62 63 64 65 66 67 68 69 70 71
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -45,8 +45,8 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	71.1
-Release:	%{?beta:0.%{beta}.}2
+Version:	72.1
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
@@ -286,7 +286,7 @@ cd source32
 	--disable-renaming \
 	--with-library-bits=64else32 \
 	--with-cross-build=$(pwd)/../source \
-	--with-data-packaging=archive || cat config.log && exit 1
+	--with-data-packaging=archive
 #rhbz#225896
 sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
 #rhbz#681941

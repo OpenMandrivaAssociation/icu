@@ -46,7 +46,7 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	72.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
@@ -99,7 +99,7 @@ Data files needed for ICU.
 Summary:	Library for the International Components for Unicode - icudata
 Group:		System/Libraries
 Obsoletes:	%{mklibname icu 44} <= 4.4.2
-Requires:	%{name}-data = %{EVRD}
+Requires(meta):	%{name}-data = %{EVRD}
 %(for i in %compatible; do echo Provides: %{_lib}icudata$i = %{EVRD}; echo Obsoletes: %{_lib}icudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i%{archmarker}"; echo Provides: "%{_lib}icudata$i(%{arch})" = %{EVRD}; done)
 
 %description -n %{libicudata}
@@ -165,7 +165,7 @@ Development files and headers for the International Components for Unicode.
 %package -n %{lib32icudata}
 Summary:	Library for the International Components for Unicode - icudata (32-bit)
 Group:		System/Libraries
-Requires:	%{name}-data = %{EVRD}
+Requires(meta):	%{name}-data = %{EVRD}
 BuildRequires:	libc6
 %(for i in %compatible; do echo Provides: libicudata$i = %{EVRD}; echo Obsoletes: libicudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i"; done)
 

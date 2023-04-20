@@ -6,19 +6,19 @@
 %endif
 
 %define major %(echo %{version} |cut -d. -f1)
-%define libicudata %mklibname %{name}data %{major}
-%define libicui18n %mklibname %{name}i18n %{major}
-%define libicuio %mklibname %{name}io %{major}
-%define libicutest %mklibname %{name}test %{major}
-%define libicutu %mklibname %{name}tu %{major}
-%define libicuuc %mklibname %{name}uc %{major}
+%define libicudata %mklibname %{name}data
+%define libicui18n %mklibname %{name}i18n
+%define libicuio %mklibname %{name}io
+%define libicutest %mklibname %{name}test
+%define libicutu %mklibname %{name}tu
+%define libicuuc %mklibname %{name}uc
 %define devname %mklibname %{name} -d
-%define lib32icudata %mklib32name %{name}data %{major}
-%define lib32icui18n %mklib32name %{name}i18n %{major}
-%define lib32icuio %mklib32name %{name}io %{major}
-%define lib32icutest %mklib32name %{name}test %{major}
-%define lib32icutu %mklib32name %{name}tu %{major}
-%define lib32icuuc %mklib32name %{name}uc %{major}
+%define lib32icudata %mklib32name %{name}data
+%define lib32icui18n %mklib32name %{name}i18n
+%define lib32icuio %mklib32name %{name}io
+%define lib32icutest %mklib32name %{name}test
+%define lib32icutu %mklib32name %{name}tu
+%define lib32icuuc %mklib32name %{name}uc
 %define dev32name %mklib32name %{name} -d
 #define beta rc
 %ifarch %arm
@@ -31,7 +31,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to (mostly) work
-%define compatible 60 61 62 63 64 65 66 67 68 69 70 71
+%define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -45,8 +45,8 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	72.1
-Release:	%{?beta:0.%{beta}.}2
+Version:	73.1
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/

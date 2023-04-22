@@ -46,13 +46,14 @@ Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
 Version:	73.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
 Source0:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-src.tgz
 Source1:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-docs.zip
 Patch0:		icu-61.1-DESTDIR.patch
+Patch1:		icu-73.1-fix-type-mismatches-in-ures.h.patch
 BuildRequires:	doxygen
 
 %description

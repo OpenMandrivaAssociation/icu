@@ -40,7 +40,6 @@
 %else
 %define fsversion %{version}
 %endif
-%bcond_with	crosscompile
 
 Summary:	International Components for Unicode
 Name:		icu
@@ -240,20 +239,32 @@ cd -
 cp -a source source32
 %endif
 
+%if %{cross_compiling}
+cp -a source source-native
+%endif
+
 %build
-cd source
-# If we want crosscompile icu we need to built ICU package
-# and add --with-cross-build=/path/to/icu
-# disable bits and do unset TARGET twice, after configure
-# and before makeinstall
-%configure --disable-samples \
+%if %{cross_compiling}
+cd source-native
+./configure \
+	--prefix=%{_prefix} \
+	--disable-samples \
 	--disable-renaming \
-%if !%{with crosscompile}
+	--with-library-bits=64else32 \
+	--with-data-packaging=library
+%make_build
+cd ..
+%endif
+
+cd source
+%configure \
+	--disable-renaming \
+%if !%{cross_compiling}
 	--with-library-bits=64else32 \
 %endif
 	--with-data-packaging=archive \
-%if %{with crosscompile}
-	--with-cross-build=/path/to/built/icu/source/ \
+%if %{cross_compiling}
+	--with-cross-build=$(realpath $(pwd)/../source-native/) \
 %endif
 	--disable-samples
 
@@ -274,9 +285,6 @@ test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepen
 mkdir -p data/out/tmp
 touch -d "10 years ago" data/out/tmp/icudata.lst
 
-%if %{with crosscompile}
-unset TARGET
-%endif
 %make_build
 %make_build doc
 cd -
@@ -315,9 +323,6 @@ cd ..
 #popd
 
 %install
-%if %{with crosscompile}
-unset TARGET
-%endif
 %if %{with compat32}
 %make_install -C source32
 %endif

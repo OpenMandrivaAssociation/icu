@@ -1,39 +1,39 @@
-diff -up icu/source/common/unicode/ures.h.omv~ icu/source/common/unicode/ures.h
---- icu/source/common/unicode/ures.h.omv~	2023-04-22 01:46:37.751893981 +0200
-+++ icu/source/common/unicode/ures.h	2023-04-22 01:47:44.721328610 +0200
-@@ -812,7 +812,7 @@ inline UnicodeString
+diff -up icu/source/common/unicode/ures.h.2~ icu/source/common/unicode/ures.h
+--- icu/source/common/unicode/ures.h.2~	2023-07-10 14:32:27.099272685 +0200
++++ icu/source/common/unicode/ures.h	2023-07-10 14:33:37.636985249 +0200
+@@ -813,7 +813,7 @@ inline UnicodeString
  ures_getUnicodeString(const UResourceBundle *resB, UErrorCode* status) {
      UnicodeString result;
      int32_t len = 0;
--    const char16_t *r = ures_getString(resB, &len, status);
-+    const UChar *r = ures_getString(resB, &len, status);
+-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
++    const UChar *r = ConstChar16Ptr(ures_getString(resB, &len, status));
      if(U_SUCCESS(*status)) {
          result.setTo(true, r, len);
      } else {
-@@ -837,7 +837,7 @@ inline UnicodeString
+@@ -838,7 +838,7 @@ inline UnicodeString
  ures_getNextUnicodeString(UResourceBundle *resB, const char ** key, UErrorCode* status) {
      UnicodeString result;
      int32_t len = 0;
--    const char16_t* r = ures_getNextString(resB, &len, key, status);
-+    const UChar* r = ures_getNextString(resB, &len, key, status);
+-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
++    const UChar* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
      if(U_SUCCESS(*status)) {
          result.setTo(true, r, len);
      } else {
-@@ -859,7 +859,7 @@ inline UnicodeString
+@@ -860,7 +860,7 @@ inline UnicodeString
  ures_getUnicodeStringByIndex(const UResourceBundle *resB, int32_t indexS, UErrorCode* status) {
      UnicodeString result;
      int32_t len = 0;
--    const char16_t* r = ures_getStringByIndex(resB, indexS, &len, status);
-+    const UChar* r = ures_getStringByIndex(resB, indexS, &len, status);
+-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
++    const UChar* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
      if(U_SUCCESS(*status)) {
          result.setTo(true, r, len);
      } else {
-@@ -882,7 +882,7 @@ inline UnicodeString
+@@ -883,7 +883,7 @@ inline UnicodeString
  ures_getUnicodeStringByKey(const UResourceBundle *resB, const char* key, UErrorCode* status) {
      UnicodeString result;
      int32_t len = 0;
--    const char16_t* r = ures_getStringByKey(resB, key, &len, status);
-+    const UChar* r = ures_getStringByKey(resB, key, &len, status);
+-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
++    const UChar* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
      if(U_SUCCESS(*status)) {
          result.setTo(true, r, len);
      } else {

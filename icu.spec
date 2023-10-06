@@ -20,7 +20,7 @@
 %define lib32icutu %mklib32name %{name}tu
 %define lib32icuuc %mklib32name %{name}uc
 %define dev32name %mklib32name %{name} -d
-#define beta rc
+%define beta rc
 %ifarch %arm
 %define _disable_lto %nil
 %endif
@@ -31,7 +31,7 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to (mostly) work
-%define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72
+%define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72 73
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -44,15 +44,15 @@
 Summary:	International Components for Unicode
 Name:		icu
 Epoch:		1
-Version:	73.2
+Version:	74
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
 Source0:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-src.tgz
 Source1:	https://github.com/unicode-org/icu/releases/download/release-%{dashedver}/icu4c-%{tarballver}-docs.zip
+Source2:	https://raw.githubusercontent.com/unicode-org/icu/main/LICENSE
 Patch0:		icu-61.1-DESTDIR.patch
-Patch1:		icu-73.1-fix-type-mismatches-in-ures.h.patch
 BuildRequires:	doxygen
 
 %description
@@ -229,6 +229,10 @@ Development files and headers for the International Components for Unicode.
 
 %prep
 %autosetup -p1 -n %{name}
+
+# LICENSE is a dangling symlink, but is being installed
+rm LICENSE
+cp %{S:2} .
 
 mkdir -p docs
 cd docs

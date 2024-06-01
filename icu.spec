@@ -31,7 +31,9 @@
 %define archmarker %nil
 %endif
 # Previous versions that are ABI compatible enough for a symlink to (mostly) work
-%define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
+# 75 seems to break the ABI pretty badly (steam no longer starting), so currently
+# there are no compat symlinks, we need the 74 compat package instead.
+#define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -44,7 +46,7 @@
 Summary:	International Components for Unicode
 Name:		icu
 Version:	75.1
-Release:	%{?beta:0.%{beta}.}1
+Release:	%{?beta:0.%{beta}.}2
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/
@@ -99,7 +101,9 @@ Summary:	Library for the International Components for Unicode - icudata
 Group:		System/Libraries
 Obsoletes:	%{mklibname icu 44} <= 4.4.2
 Requires(meta):	%{name}-data = %{EVRD}
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icudata$i = %{EVRD}; echo Obsoletes: %{_lib}icudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i%{archmarker}"; echo Provides: "%{_lib}icudata$i(%{arch})" = %{EVRD}; done)
+%endif
 
 %description -n %{libicudata}
 Library for the International Components for Unicode - icudata.
@@ -107,7 +111,9 @@ Library for the International Components for Unicode - icudata.
 %package -n %{libicui18n}
 Summary:	Library for the International Components for Unicode - icui18n
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icui18n$i = %{EVRD}; echo Obsoletes: %{_lib}icui18n$i "<" %{EVRD}; echo Provides: "libicui18n.so.$i%{archmarker}"; echo Provides: "%{_lib}icui18n$i(%{arch})" = %{EVRD}; done)
+%endif
 
 %description -n %{libicui18n}
 Library for the International Components for Unicode - icui18n.
@@ -115,7 +121,9 @@ Library for the International Components for Unicode - icui18n.
 %package -n %{libicuio}
 Summary:	Library for the International Components for Unicode - icuio
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icuio$i = %{EVRD}; echo Obsoletes: %{_lib}icuio$i "<" %{EVRD}; echo Provides: "libicuio.so.$i%{archmarker}"; echo Provides: "%{_lib}icuio$i(%{arch}) = %{EVRD}"; done)
+%endif
 
 %description -n %{libicuio}
 Library for the International Components for Unicode - icuio.
@@ -123,7 +131,9 @@ Library for the International Components for Unicode - icuio.
 %package -n %{libicutest}
 Summary:	Library for the International Components for Unicode - icutest
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icutest$i = %{EVRD}; echo Obsoletes: %{_lib}icutest$i "<" %{EVRD}; echo Provides: "libicutest.so.$i%{archmarker}"; echo Provides: "%{_lib}icutest$i(%{arch}) = %{EVRD}"; done)
+%endif
 
 %description -n %{libicutest}
 Library for the International Components for Unicode - icutest.
@@ -131,7 +141,9 @@ Library for the International Components for Unicode - icutest.
 %package -n %{libicutu}
 Summary:	Library for the International Components for Unicode - icutu
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icutu$i = %{EVRD}; echo Obsoletes: %{_lib}icutu$i "<" %{EVRD}; echo Provides: "libicutu.so.$i%{archmarker}"; echo Provides: "%{_lib}icutu$i(%{arch}) = %{EVRD}"; done)
+%endif
 
 %description -n %{libicutu}
 Library for the International Components for Unicode - icutu.
@@ -139,7 +151,9 @@ Library for the International Components for Unicode - icutu.
 %package -n %{libicuuc}
 Summary:	Library for the International Components for Unicode - icuuc
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: %{_lib}icuuc$i = %{EVRD}; echo Obsoletes: %{_lib}icuuc$i "<" %{EVRD}; echo Provides: "libicuuc.so.$i%{archmarker}"; echo Provides: "%{_lib}icuuc$i(%{arch}) = %{EVRD}"; done)
+%endif
 
 %description -n %{libicuuc}
 Library for the International Components for Unicode - icuuc.
@@ -166,7 +180,9 @@ Summary:	Library for the International Components for Unicode - icudata (32-bit)
 Group:		System/Libraries
 Requires(meta):	%{name}-data = %{EVRD}
 BuildRequires:	libc6
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicudata$i = %{EVRD}; echo Obsoletes: libicudata$i "<" %{EVRD}; echo Provides: "libicudata.so.$i"; done)
+%endif
 
 %description -n %{lib32icudata}
 Library for the International Components for Unicode - icudata.
@@ -174,7 +190,9 @@ Library for the International Components for Unicode - icudata.
 %package -n %{lib32icui18n}
 Summary:	Library for the International Components for Unicode - icui18n (32-bit)
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicui18n$i = %{EVRD}; echo Obsoletes: libicui18n$i "<" %{EVRD}; echo Provides: "libicui18n.so.$i"; done)
+%endif
 
 %description -n %{lib32icui18n}
 Library for the International Components for Unicode - icui18n.
@@ -182,7 +200,9 @@ Library for the International Components for Unicode - icui18n.
 %package -n %{lib32icuio}
 Summary:	Library for the International Components for Unicode - icuio (32-bit)
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicuio$i = %{EVRD}; echo Obsoletes: libicuio$i "<" %{EVRD}; echo Provides: "libicuio.so.$i"; done)
+%endif
 
 %description -n %{lib32icuio}
 Library for the International Components for Unicode - icuio.
@@ -190,7 +210,9 @@ Library for the International Components for Unicode - icuio.
 %package -n %{lib32icutest}
 Summary:	Library for the International Components for Unicode - icutest (32-bit)
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicutest$i = %{EVRD}; echo Obsoletes: libicutest$i "<" %{EVRD}; echo Provides: "libicutest.so.$i"; done)
+%endif
 
 %description -n %{lib32icutest}
 Library for the International Components for Unicode - icutest.
@@ -198,7 +220,9 @@ Library for the International Components for Unicode - icutest.
 %package -n %{lib32icutu}
 Summary:	Library for the International Components for Unicode - icutu (32-bit)
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicutu$i = %{EVRD}; echo Obsoletes: libicutu$i "<" %{EVRD}; echo Provides: "libicutu.so.$i"; done)
+%endif
 
 %description -n %{lib32icutu}
 Library for the International Components for Unicode - icutu.
@@ -206,7 +230,9 @@ Library for the International Components for Unicode - icutu.
 %package -n %{lib32icuuc}
 Summary:	Library for the International Components for Unicode - icuuc (32-bit)
 Group:		System/Libraries
+%if %{defined compatible}
 %(for i in %compatible; do echo Provides: libicuuc$i = %{EVRD}; echo Obsoletes: libicuuc$i "<" %{EVRD}; echo Provides: "libicuuc.so.$i"; done)
+%endif
 
 %description -n %{lib32icuuc}
 Library for the International Components for Unicode - icuuc.
@@ -331,6 +357,7 @@ cd ..
 %endif
 %make_install -C source
 
+%if %{defined compatible}
 cd %{buildroot}%{_libdir}
 for c in %compatible; do
 	for i in *.so.%{major}; do
@@ -346,6 +373,7 @@ for c in %compatible; do
 	done
 done
 %endif
+%endif
 
 
 %files
@@ -360,6 +388,7 @@ done
 %files data
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/%{fsversion}
+%dir %{_datadir}/%{name}/%{fsversion}/config
 %{_datadir}/%{name}/%{fsversion}/icudt%{major}l.dat
 
 %files -n %{libicudata}
@@ -421,6 +450,7 @@ done
 
 # Make sure the compat symlinks don't get removed when
 # we replace older packages
+%if %{defined compatible}
 %(for i in %{compatible}; do
 	for l in data i18n io test tu uc; do
 		cat <<EOF
@@ -436,3 +466,4 @@ EOF
 %endif
 	done
 done)
+%endif

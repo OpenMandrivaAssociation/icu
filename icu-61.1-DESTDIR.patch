@@ -2,7 +2,7 @@ diff -up icu/source/data/Makefile.in.omv~ icu/source/data/Makefile.in
 --- icu/source/data/Makefile.in.omv~	2018-04-09 00:10:29.468022990 +0200
 +++ icu/source/data/Makefile.in	2018-04-09 00:11:13.840374522 +0200
 @@ -200,16 +200,16 @@ endif
- install-local: $(PKGDATA_LIST) ./icupkg.inc packagedata $(OS390INSTALL)
+ install-local: $(PKGDATA_LIST) ./icupkg.inc packagedata
  	$(MKINSTALLDIRS) $(TMPDATADIR) $(DESTDIR)$(ICUPKGDATA_DIR)
  ifeq ($(PKGDATA_MODE),files)
 -	$(MKINSTALLDIRS) $(ICUPKGDATA_DIR)/$(ICUDATA_NAME)

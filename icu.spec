@@ -34,7 +34,7 @@
 # 75 seems to break the ABI pretty badly (steam no longer starting), so currently
 # there are no compat symlinks, we need the 74 compat package instead.
 #define compatible 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
-%define compatible 75
+%define compatible 76
 
 %define tarballver %(echo %{version}|sed -e 's|\\.|_|g')%{?beta:%{beta}}
 %define dashedver %(echo %{version}|sed -e 's|\\.|-|g')%{?beta:-%{beta}}
@@ -46,8 +46,8 @@
 
 Summary:	International Components for Unicode
 Name:		icu
-Version:	76.1
-Release:	%{?beta:0.%{beta}.}2
+Version:	77.1
+Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
 Url:		https://icu.unicode.org/

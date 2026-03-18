@@ -46,7 +46,7 @@
 
 Summary:	International Components for Unicode
 Name:		icu
-Version:	78.2
+Version:	78.3
 Release:	%{?beta:0.%{beta}.}1
 License:	MIT
 Group:		System/Libraries
@@ -57,7 +57,6 @@ Source2:	https://raw.githubusercontent.com/unicode-org/icu/main/LICENSE
 Patch0:		icu-61.1-DESTDIR.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libtool-base
 BuildRequires:	slibtool
 BuildRequires:	make
 BuildRequires:	doxygen

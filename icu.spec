@@ -280,6 +280,9 @@ cp -a source source-native
 %build
 %if %{cross_compiling}
 cd source-native
+# macros.cross-pkgconfig injects a target CC; this helper must be a
+# host binary (ICU --with-cross-build tools run on the build machine).
+unset CC CXX CFLAGS CXXFLAGS LDFLAGS AR RANLIB
 ./configure \
 	--prefix=%{_prefix} \
 	--disable-samples \

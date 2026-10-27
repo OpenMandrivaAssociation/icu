@@ -328,6 +328,10 @@ cd -
 
 %if %{with compat32}
 cd source32
+# clang -m32 looks for an i686 sysroot the build chroot does not have.
+# gcc's multilib driver links the crt objects shipped in glibc-devel.
+export CC=gcc
+export CXX=g++
 %configure32 --disable-samples \
 	--disable-renaming \
 	--with-library-bits=64else32 \
